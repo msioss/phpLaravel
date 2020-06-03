@@ -24,28 +24,17 @@
                         </ul>
                     </div><br />
                 @endif
-                <form method="post" enctype="multipart/form-data" action="{{ route('categories.store') }}">
+                <form id="create" method="post" enctype="multipart/form-data" action="{{ route('categories.store') }}">
                     @csrf
                     <div class="form-group">
                         <label for="name">Name:</label>
                         <input type="text" id="name" class="form-control" name="name"/>
                     </div>
-
-                    <div style="display: flex; flex-direction: column;" class="form-group">
-                        <div class="custom-file mb-3">
-                            <label class="custom-file-label" for="customFile">Choose a photo</label>
-                            <input onchange="loadFile(event)" id="customFile" name="image" type="file" class="custom-file-input">
-                        </div>
-                        <img style="height: 200px; width: 200px" id="output" src="/images/200_default.png" alt="">
-                        <script>
-                            let loadFile = function(event) {
-                                let output = document.getElementById('output');
-                                output.src = URL.createObjectURL(event.target.files[0]);
-                                output.onload = function() {
-                                    URL.revokeObjectURL(output.src) // free memory
-                                }
-                            };
-                        </script>
+                    <div class="form-group">
+                        <img class="choose-image" src="{{ asset('images/200_default.png') }}"
+                             id="chooseImage" alt="Обрати фото">
+                        <input type="hidden" name="image" id="image">
+                        <input type="file" id="selectImage" class="d-none">
                     </div>
                     <div class="form-group">
 {{--                        <label for="description">Description:</label>--}}
@@ -60,6 +49,29 @@
             </div>
         </div>
     </div>
+    <div class="modal" id="cropperModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <img id="imageCropper" src="{{ asset('images/200_default.png') }}" height="400">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a id="img-rotation" class="btn btn-success"><i class="fa fa-repeat" aria-hidden="true"></i></a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button id="cropImg" class="btn btn-primary">Обрізати фото</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ asset('js/app.js') }}" ></script>
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.js"></script>
     <script type="text/javascript"
@@ -79,11 +91,63 @@
     <script type="text/javascript" src="/js/plugins/video.min.js"></script>
     <script type="text/javascript" src="/js/plugins/url.min.js"></script>
     <script type="text/javascript" src="/js/plugins/entities.min.js"></script>
-
     <script>
-        function cl(){
-            console.log(getElementById("edit"));
-        }
+        jQuery(function () {
+            //фото по якому клікаємо і обираємо файл
+            $chooseImage = $("#chooseImage");
+            //текстове поле із base64
+            $base64Image = $("#image");
+            //скритий інпут для вибору файла
+            $selectImage = $("#selectImage");
+            let dialogCropper = $("#cropperModal");
+            //клікнули по фото і клікаємо по скритому інпуту файл
+            $chooseImage.on("click", function () {
+                $selectImage.click();
+            });
+            //коли обрали файл
+            $selectImage.on("change", function() {
+                if (this.files && this.files.length) {
+                    let file = this.files[0];
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        dialogCropper.modal('show');
+                        cropper.replace(e.target.result);
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+            //запуск кропера
+            const imageCropper = document.getElementById('imageCropper');
+            const cropper = new Cropper(imageCropper, {
+                aspectRatio: 1/1,
+                viewMode: 1,
+                autoCropArea: 0.5,
+                crop(event) {
+                    // console.log(event.detail.x);
+                    // console.log(event.detail.y);
+                    // console.log(event.detail.width);
+                    // console.log(event.detail.height);
+                    // console.log(event.detail.rotate);
+                    // console.log(event.detail.scaleX);
+                    // console.log(event.detail.scaleY);
+                },
+            });
+            //поворот малюнка
+            $("#img-rotation").on("click",function (e) {
+                e.preventDefault();
+                cropper.rotate(45);
+            });
+            //обрізка малюнка
+            $("#cropImg").on("click", function (e) {
+                e.preventDefault();
+                let imgContent = cropper.getCroppedCanvas().toDataURL();
+                $chooseImage.attr("src", imgContent);
+                dialogCropper.modal('hide');
+                $base64Image.val(imgContent);
+            });
+        })
+    </script>
+    <script>
         (function () {
             const editorInstance = new FroalaEditor('#edit', {
                 enter: FroalaEditor.ENTER_P,
@@ -99,12 +163,5 @@
                 }
             })
         })()
-    </script>
-
-    <script src={{ asset('js/app.js') }}></script>
-    <script>
-        jQuery(function () {
-            //alert("weed");
-        })
     </script>
 @endsection

@@ -3,7 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laravel 7 & MySQL CRUD Tutorial</title>
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet" />
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -44,6 +44,6 @@
 <div class="container">
     @yield('main')
 </div>
-<script src="{{ asset('js/app.js') }}" type="text/js"></script>
+<script src="{{ asset('js/app.js') }}" ></script>
 </body>
 </html>

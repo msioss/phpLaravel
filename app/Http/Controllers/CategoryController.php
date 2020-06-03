@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class CategoryController extends Controller
 {
@@ -39,16 +40,23 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name'=>'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            //'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required',
             'description'=>'required'
         ]);
 
-        $imageName = Str::uuid().'.'.request()->image->extension();
-        request()->image->move(public_path('images'), $imageName);
+        $type = explode('/', mime_content_type(request()->image))[1];
+        $img_url = Str::uuid().'.'.$type;
+        $path = public_path('images/').$img_url;
+
+        Image::make(file_get_contents(request()->image))->save($path);
+        //$imageName = Str::uuid().'.'.request()->image->extension();
+        //request()->image->move(public_path('images'), $imageName);
 
         $category = new Category([
             'name' => $request->get('name'),
-            'image' => $imageName,
+            //'image' => $imageName,
+            'image' => $img_url,
             'description' => $request->get('description')
         ]);
         $category->save();

@@ -13,7 +13,7 @@
         <div class="col-sm-12">
             <h1 class="display-3">Categories</h1>
             <div>
-                <a style="margin: 19px;" href="{{ route('categories.create')}}" class="btn btn-primary">New contact</a>
+                <a style="margin: 19px;" href="{{ route('categories.create')}}" class="btn btn-primary">New category</a>
             </div>
             <table class="table table-striped">
                 <thead>

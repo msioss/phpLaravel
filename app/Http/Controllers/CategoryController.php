@@ -44,12 +44,16 @@ class CategoryController extends Controller
             'image' => 'required',
             'description'=>'required'
         ]);
-
         $type = explode('/', mime_content_type(request()->image))[1];
+
         $img_url = Str::uuid().'.'.$type;
         $path = public_path('images/').$img_url;
 
-        Image::make(file_get_contents(request()->image))->save($path);
+        $image_resize=Image::make(file_get_contents(request()->image));
+        //$image_resize->resize(300, 300);
+        $image_resize->save($path);
+        compressImage($image_resize->width(), $image_resize->height(), $path,$type);
+
         //$imageName = Str::uuid().'.'.request()->image->extension();
         //request()->image->move(public_path('images'), $imageName);
 
@@ -107,4 +111,53 @@ class CategoryController extends Controller
     {
         //
     }
+}
+function compressImage($width, $height, $path,$type)
+{
+    list($w,$h)= getimagesize($path);
+    $maxSize=0;
+    if(($w>$h) and ($width>$height))
+        $maxSize=$width;
+    else
+        $maxSize=$height;
+    $width=$maxSize;
+    $height=$maxSize;
+    $ration_orig=$w/$h;
+    if(1>$ration_orig)
+    {
+        $width=ceil($height*$ration_orig);
+    }
+    else
+    {
+        $height=ceil($width/$ration_orig);
+    }
+
+    $imgString=file_get_contents($path);
+    $image=imagecreatefromstring($imgString);
+    $tmp=imagecreatetruecolor($width,$height);
+    imagecopyresampled($tmp,$image,
+        0,0,
+        0,0,
+        $width, $height,
+        $w,$h
+    );
+
+    switch($type)
+    {
+        case 'jpeg' || 'jpg':
+            imagejpeg($tmp,$path,30);
+            break;
+        case 'png':
+            imagepng($tmp,$path,10);
+            break;
+        case 'gif':
+            imagegif($tmp,$path);
+            break;
+        default:
+            exit;
+            break;
+    }
+    //return $path;
+    imagedestroy($image);
+    imagedestroy($tmp);
 }

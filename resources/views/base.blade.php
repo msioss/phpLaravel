@@ -41,7 +41,7 @@
         </form>
     </div>
 </nav>
-<div class="container">
+<div class="container mb-5">
     @yield('main')
 </div>
 <script src="{{ asset('js/app.js') }}" ></script>

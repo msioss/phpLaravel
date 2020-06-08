@@ -41,21 +41,21 @@ class CategoryController extends Controller
         $request->validate([
             'name'=>'required',
             //'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'image' => 'required',
+            'base64Image' => 'required',
             'description'=>'required'
         ]);
-        $type = explode('/', mime_content_type(request()->image))[1];
+        $type = explode('/', mime_content_type(request()->base64Image))[1];
 
         $img_url = Str::uuid().'.'.$type;
         $path = public_path('images/').$img_url;
 
-        $image_resize=Image::make(file_get_contents(request()->image));
+        $image_resize=Image::make(file_get_contents(request()->base64Image));
         //$image_resize->resize(300, 300);
         $image_resize->save($path);
         compressImage($image_resize->width(), $image_resize->height(), $path,$type);
 
-        //$imageName = Str::uuid().'.'.request()->image->extension();
-        //request()->image->move(public_path('images'), $imageName);
+        //$imageName = Str::uuid().'.'.request()->base64Image->extension();
+        //request()->base64Image->move(public_path('images'), $imageName);
 
         $category = new Category([
             'name' => $request->get('name'),

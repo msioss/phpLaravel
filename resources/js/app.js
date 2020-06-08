@@ -6,6 +6,8 @@
 
 require('./bootstrap');
 
+require('./stackPhoto');
+
 window.Vue = require('vue');
 
 /**

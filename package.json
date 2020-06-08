@@ -24,6 +24,8 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
-        "cropperjs": "^1.5.7"
+        "cropperjs": "^1.5.7",
+        "tinymce": "^5.3.1",
+        "tinymce-i18n": "^20.4.4"
     }
 }

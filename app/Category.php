@@ -11,4 +11,12 @@ class Category extends Model
         'description',
         'image'
     ];
+
+    /**
+     * Get the products for the category.
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);//('App\Product');// Product::class);
+    }
 }

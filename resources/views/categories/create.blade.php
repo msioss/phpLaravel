@@ -1,16 +1,7 @@
 @extends('base')
 
 @section('main')
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/css/froala_editor.css">
-    <link rel="stylesheet" href="/css/froala_style.css">
-    <link rel="stylesheet" href="/css/plugins/code_view.css">
-    <link rel="stylesheet" href="/css/plugins/image_manager.css">
-    <link rel="stylesheet" href="/css/plugins/image.css">
-    <link rel="stylesheet" href="/css/plugins/table.css">
-    <link rel="stylesheet" href="/css/plugins/video.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.css">
+
     <div class="row">
         <div class="col-sm-8 offset-sm-2">
             <h1 class="display-3">Add a category</h1>
@@ -33,16 +24,11 @@
                     <div class="form-group">
                         <img class="choose-image" src="{{ asset('images/200_default.png') }}"
                              id="chooseImage" alt="Обрати фото">
-                        <input type="hidden" name="image" id="image">
-                        <input type="file" id="selectImage" class="d-none">
+                        <input type="hidden" name="base64Image" id="base64Image">
                     </div>
                     <div class="form-group">
-{{--                        <label for="description">Description:</label>--}}
-{{--                        <textarea id="description" rows="10" cols="35" class="form-control" name="description"></textarea>--}}
-                        <textarea name="description" id='edit' style="margin-top: 30px;" placeholder="Type some text">
-                            <h1>Description</h1>
-{{--                            <p>The editor can also be initialized on a textarea.</p>--}}
-                        </textarea>
+                        <label for="email">Description:</label>
+                        <textarea class="form-control" name="description" id ="description" rows="10" cols="45" ></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Add category</button>
                 </form>
@@ -50,26 +36,9 @@
         </div>
     </div>
     @include('view._cropper-modal');
-    <script src="{{ asset('js/app.js') }}" ></script>
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.js"></script>
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/mode/xml/xml.min.js"></script>
-    <script type="text/javascript" src="/js/froala_editor.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/align.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/code_beautifier.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/code_view.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/draggable.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/image.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/image_manager.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/link.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/lists.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/paragraph_format.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/paragraph_style.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/table.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/video.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/url.min.js"></script>
-    <script type="text/javascript" src="/js/plugins/entities.min.js"></script>
+@endsection
+
+@section('scripts')
     <script>
         jQuery(function () {
             //фото по якому клікаємо і обираємо файл
@@ -81,24 +50,24 @@
             let dialogCropper = $("#cropperModal");
             //клікнули по фото і клікаємо по скритому інпуту файл
             $chooseImage.on("click", function () {
-                $selectImage.click();
-            });
-            //коли обрали файл
-            $selectImage.on("change", function() {
-                if (this.files && this.files.length) {
-                    let file = this.files[0];
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        dialogCropper.modal('show');
-                        cropper.replace(e.target.result);
+                let uploader = $('<input type="file" accept="image/*" />');
+                uploader.click()
+                uploader.on('change', function () {
+                    if (this.files && this.files.length) {
+                        let file = this.files[0];
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            dialogCropper.modal('show');
+                            cropper.replace(e.target.result);
+                        }
+                        reader.readAsDataURL(file);
                     }
-                    reader.readAsDataURL(file);
-                }
+                });
             });
             //запуск кропера
             const imageCropper = document.getElementById('imageCropper');
             const cropper = new Cropper(imageCropper, {
-                aspectRatio: 1/1,
+                aspectRatio: 1 / 1,
                 viewMode: 1,
                 autoCropArea: 0.5,
                 crop(event) {
@@ -112,7 +81,7 @@
                 },
             });
             //поворот малюнка
-            $("#img-rotation").on("click",function (e) {
+            $("#img-rotation").on("click", function (e) {
                 e.preventDefault();
                 cropper.rotate(45);
             });
@@ -126,21 +95,29 @@
             });
         })
     </script>
-    <script>
-        (function () {
-            const editorInstance = new FroalaEditor('#edit', {
-                enter: FroalaEditor.ENTER_P,
-                placeholderText: null,
-                events: {
-                    initialized: function () {
-                        const editor = this
-                        this.el.closest('form').addEventListener('submit', function (e) {
-                            //console.log(editor.$oel.val())
+    <script src="{{ asset('node_modules/tinymce/tinymce.js') }}"></script>
+    <script src="{{ asset('node_modules/tinymce-i18n/langs/uk.js') }}"></script>
 
-                        })
-                    }
-                }
-            })
-        })()
+    <script>
+        tinymce.init({
+            selector: 'textarea#description',
+            language: "uk",
+            theme: "silver",
+            menubar: true,
+            skin: 'oxide-dark',
+            content_css: 'dark',
+            plugins: [
+                "advlist autolink lists link image charmap print preview anchor",
+                "searchreplace visualblocks code fullscreen",
+                "insertdatetime media table paste code help wordcount",
+            ],
+            toolbar:
+                "undo redo | formatselect | bold italic backcolor | \
+     alignleft aligncenter alignright alignjustify | \
+     bullist numlist outdent indent | removeformat | help",
+        });
+        // $(function () {
+        //     new FroalaEditor('#edit');
+        // });
     </script>
 @endsection

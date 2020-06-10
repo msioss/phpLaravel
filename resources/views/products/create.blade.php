@@ -20,12 +20,15 @@
                         <label for="name">Name:</label>
                         <input type="text" id="name" class="form-control" name="name"/>
                     </div>
-                    <select class="custom-select" name="category" >
-                        <option value="">--Please choose an option--</option>
-                        @foreach($categories as $category)
-                            <option value="{{$category->id}}">{{$category->name}}</option>
-                        @endforeach
-                    </select>
+                    <div class="form-group">
+                        <label for="category">Category:</label>
+                        <select class="custom-select" name="category">
+                            <option value="">--Please choose an option--</option>
+                            @foreach($categories as $category)
+                                <option value="{{$category->id}}">{{$category->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="form-group mt-3">
                         <label for="price">Price:</label>
                         <input type="text" id="price" class="form-control" name="price"/>
@@ -37,7 +40,8 @@
                     @include("view._stack-photo")
                     <div class="form-group">
                         <label for="email">Description:</label>
-                        <textarea class="form-control" name="description" id ="description" rows="10" cols="45" ></textarea>
+                        <textarea class="form-control" name="description" id="description" rows="10"
+                                  cols="45"></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Add product</button>
 
@@ -54,6 +58,7 @@
             $(document).ready(function () {
                 //загрузка фото на клік
                 uploadImage();
+
                 //загрузка фото на клік
                 function uploadImage() {
                     let cropper = null;

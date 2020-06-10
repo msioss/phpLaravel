@@ -48,6 +48,7 @@
         </div>
     </div>
 @endsection
+@section('scripts')
 @endsection
 
-@section('scripts')
+

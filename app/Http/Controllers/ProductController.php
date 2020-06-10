@@ -97,7 +97,11 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        //
+        $product = Product::find($id);
+        $categories = Category::all('id', 'name');
+        $selectedCategory=$categories->find($product->category_id);
+        $data=array('product'=>$product, 'categories'=>$categories, 'selectedCategory'=>$selectedCategory);
+        return view('products.edit', compact('data'));
     }
 
     /**
@@ -109,7 +113,21 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required',
+            'category' => 'required',
+            'price' => 'required'
+        ]);
+
+        $product = Product::find($id);
+        $product->name =  $request->get('name');
+        $product->description = $request->get('description');
+        $product->category_id = $request->get('category');
+        $product->price = $request->get('price');
+        $product->save();
+
+        return redirect('/')->with('success', 'Product updated!');
     }
 
     /**
@@ -120,7 +138,10 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $product = Product::find($id);
+        $product->delete();
+
+        return redirect('/')->with('success', 'Product deleted!');
     }
 
     public function upload(Request $request)

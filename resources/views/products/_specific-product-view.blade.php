@@ -77,20 +77,20 @@
                                                             display: none;
                                                         }
                                                     </style>
-                                                    <div class="product-add-to-cart">
-                                                        <span class="control-label">Quantity</span>
-                                                        <div class="cart-plus-minus">
-                                                            <input class="cart-plus-minus-box" type="text" name="quantity" value="1">
-                                                        </div>
+                                                    <div  style="display: flex; flex-direction: column" class="product-add-to-cart">
                                                         <div>
-                                                            <a asp-controller="Product" asp-action="AddToCart" asp-route-id="@Model.Product.Id" style="text-decoration: inherit;color:inherit; position: inherit; ">
-                                                                <button class="btn btn-primary">Order</button>
-                                                            </a>
-                                                            <div class="flex-row mt-3" style="display:flex; align-self:center; align-items:center;">
-
-
-
+                                                            <span class="control-label">Quantity</span>
+                                                            <div class="cart-plus-minus">
+                                                                <input class="cart-plus-minus-box" type="text"
+                                                                       name="quantity" value="1">
                                                             </div>
+                                                        </div>
+                                                        <div class="mt-4">
+                                                            <a style=" text-decoration: inherit;color:inherit; ">
+                                                                <button class="btn btn-primary" style="width: 150px">Order</button>
+                                                            </a>
+                                                            {{--                                                        <div class="flex-row mt-3" style="display:flex; align-self:center; align-items:center;">--}}
+                                                            {{--                                                        </div>--}}
                                                         </div>
                                                     </div>
 

@@ -8,6 +8,8 @@ require('./bootstrap');
 
 require('./stackPhoto');
 
+require('./xzoom.min');
+
 window.Vue = require('vue');
 
 /**

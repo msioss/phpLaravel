@@ -15,39 +15,27 @@
             <div>
                 <a style="margin: 19px;" href="{{ route('products.create')}}" class="btn btn-primary">New products</a>
             </div>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <td>Id</td>
-                    <td>Price</td>
-                    <td>Count</td>
-                    <td>Description</td>
-                    <td>Category</td>
-                    <td colspan = 2>Actions</td>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($products as $product)
-                    <tr>
-                        <td>{{$product->id}}</td>
-                        <td>{{$product->price}}</td>
-                        <td>{{$product->count}}</td>
-                        <td>{{$product->description}}</td>
-                        <td>{{$product->category->name}}</td>
-                        <td>
-                            <a href="{{ route('products.edit',$product->id)}}" class="btn btn-primary">Edit</a>
-                        </td>
-                        <td>
-                            <form action="{{ route('products.destroy', $product->id)}}" method="post">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-danger" type="submit">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="container">
+
+                        <div class="row">
+                            @foreach ($products as $product)
+
+                                <div class="card col-md-4 col-sm-6 p-2 mx-3" style="width: 18rem;">
+                                    <img class="card-img-top mt-2" style="border-radius: 10px" src={{'images/420_'.$product->productImages[0]->name}} alt="Card image cap">
+                                    <div class="card-body">
+                                        <h5 style="color: #054a92; text-transform: uppercase; font-weight: bold" class="card-title">{{ $product->name }}</h5>
+                                        <p style="color: #011e21; font-size: 16px" class="card-text">${{ $product->price }}</p>
+                                        <a href="{{"/products/".$product->id}}" class="btn btn-primary">View</a>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                    </div>
+                </div>
+            </div>
             <div>
             </div>
 @endsection

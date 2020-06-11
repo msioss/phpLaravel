@@ -28,4 +28,6 @@ Route::resource('categories', 'CategoryController');
 
 Route::resource('products', 'ProductController')->middleware('auth');
 
+Route::get('/products/deleteImage/{id}', 'ProductController@deleteImage')->middleware('auth');
+
 Route::post('/products/upload', 'ProductController@upload');

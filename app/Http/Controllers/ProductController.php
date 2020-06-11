@@ -8,7 +8,6 @@ use App\ProductImage;
 use App\Category;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Str;
-use function GuzzleHttp\Promise\all;
 
 class ProductController extends Controller
 {
@@ -19,7 +18,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        //$products = Product::all();
+        $products = Product::paginate(4);
+
         return view('products.index', compact('products'));
     }
 
@@ -82,7 +83,7 @@ class ProductController extends Controller
 
     public function home()
     {
-        $products = Product::all();
+        $products = Product::paginate(3);
         //$product = Product::find(1);
         //$listImages = $product->productImages;
 
@@ -163,7 +164,12 @@ class ProductController extends Controller
 
         return response()->json(['id' => $productImage->id, 'url' => '/images/420_' . $img_url]);
     }
-
+    public function deleteImage($id)
+    {
+        $productImage = ProductImage::find($id);
+        $productImage->delete();
+        return ("Ok");
+    }
 
 }
 

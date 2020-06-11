@@ -25,7 +25,7 @@
                                                     <div class="xzoom-thumbs">
                                                         @foreach ($product->productImages as $image)
                                                             <a href={{'/images/840_'.$image->name}} >
-                                                                <img class="xzoom-gallery" style=" object-fit: contain;" width="80" height="80" src={{'/images/420_'.$image->name}} >
+                                                                <img class="xzoom-gallery" style=" object-fit: contain;" width="105" height="80" src={{'/images/420_'.$image->name}} >
                                                             </a>
                                                         @endforeach
                                                     </div>

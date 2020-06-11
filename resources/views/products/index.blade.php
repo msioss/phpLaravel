@@ -13,17 +13,17 @@
         <div class="col-sm-12">
             <h1 class="display-3">Products</h1>
             <div>
-                <a style="margin: 19px;" href="{{ route('products.create')}}" class="btn btn-primary">New products</a>
+                <a style="margin: 19px;" href="{{ route('products.create')}}" class="btn btn-primary">New product</a>
             </div>
             <div class="container">
                 <div class="row justify-content-center">
-                    <div class="container">
+                    <div class="container ">
 
-                        <div class="row">
+                        <div class="row justify-content-center">
                             @foreach ($products as $product)
 
-                                <div class="card col-md-4 col-sm-6 p-2 mx-3" style="width: 18rem;">
-                                    <img class="card-img-top mt-2" style="border-radius: 10px" src={{'images/420_'.$product->productImages[0]->name}} alt="Card image cap">
+                                <div class="card col-md-3 col-sm-4 p-2 mx-2 mt-2" style="width: 18rem;">
+                                    <img class="card-img-top mt-2" style="border-radius: 10px" src="{{'images/420_'.$product->productImages[0]->name}}" alt="Card image cap">
                                     <div class="card-body">
                                         <h5 style="color: #054a92; text-transform: uppercase; font-weight: bold" class="card-title">{{ $product->name }}</h5>
                                         <p style="color: #011e21; font-size: 16px" class="card-text">${{ $product->price }}</p>
@@ -36,7 +36,10 @@
                     </div>
                 </div>
             </div>
-            <div>
+
+            <div style="display: flex; justify-content: center; margin-top: 25px">
+                {!! $products->links() !!}
+
             </div>
 @endsection
 
